@@ -34,6 +34,11 @@ public class TextFileController {
         }
     }
 
+    @GetMapping("/commit/{fileId}")
+    public ResponseEntity<?> commitFile(@PathVariable("fileId") String fileId) {
+        return textFileService.commitFile(UUID.fromString(fileId)) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("/{fileId}")
     public ResponseEntity<TextFileModel> getFile(@PathVariable("fileId") String fileId) {
         TextFileModel textFileModel = textFileService.getFile(UUID.fromString(fileId));
