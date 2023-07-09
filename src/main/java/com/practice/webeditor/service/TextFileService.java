@@ -13,19 +13,20 @@ import java.util.UUID;
 public class TextFileService {
     public final TextFileStorage textFileStorage;
 
-    public void addOrUpdateFile(TextFileModel textFileModel) {
-        textFileStorage.addOrUpdateFile(textFileModel);
+    public void addFile(TextFileModel textFileModel) {
+        textFileStorage.saveTextFile(textFileModel);
     }
 
     public TextFileModel getFile(UUID fileId) {
-        return textFileStorage.getFileByUUID(fileId);
+        return textFileStorage.readTextFileByUUID(fileId);
     }
+
 
     public List<TextFileModel> getAll() {
         return textFileStorage.getAllFiles();
     }
 
-    public void deleteFile(UUID fileId) {
-        textFileStorage.deleteFileByUUID(fileId);
+    public boolean deleteFile(UUID fileId) {
+        return textFileStorage.deleteFileByUUID(fileId);
     }
 }

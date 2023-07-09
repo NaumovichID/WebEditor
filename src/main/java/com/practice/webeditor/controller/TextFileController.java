@@ -19,7 +19,7 @@ public class TextFileController {
     @PostMapping
     public ResponseEntity<TextFileModel> uploadFile(@RequestBody TextFileModel textFileModel) {
         textFileModel.setFileId(UUID.randomUUID());
-        textFileService.addOrUpdateFile(textFileModel);
+        textFileService.addFile(textFileModel);
         return new ResponseEntity<>(textFileModel, HttpStatus.OK);
     }
 
@@ -27,7 +27,7 @@ public class TextFileController {
     public ResponseEntity<TextFileModel> updateFile(@PathVariable("fileId") String fileId, @RequestBody TextFileModel textFileModel) {
         if (textFileService.getFile(UUID.fromString(fileId)) != null) {
             textFileModel.setFileId(UUID.fromString(fileId));
-            textFileService.addOrUpdateFile(textFileModel);
+            textFileService.addFile(textFileModel);
             return new ResponseEntity<>(textFileModel, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
@@ -47,8 +47,8 @@ public class TextFileController {
     }
 
     @DeleteMapping("/{fileId}")
-    public void deleteFile(@PathVariable("fileId") String fileId) {
-        textFileService.deleteFile(UUID.fromString(fileId));
+    public ResponseEntity<?> deleteFile(@PathVariable("fileId") String fileId) {
+        return textFileService.deleteFile(UUID.fromString(fileId)) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }
