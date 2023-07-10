@@ -21,7 +21,9 @@ public class TextFileService {
         return textFileStorage.readTextFileByUUID(fileId);
     }
 
-
+    public boolean commitFile(UUID fileId) {
+        return textFileStorage.commitTextFile(fileId);
+    }
     public List<TextFileModel> getAll() {
         return textFileStorage.getAllFiles();
     }

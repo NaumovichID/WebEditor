@@ -1,6 +1,10 @@
 package com.practice.webeditor.data.storage;
 
 import com.practice.webeditor.data.model.TextFileModel;
+import jakarta.annotation.PostConstruct;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.InitCommand;
+import org.eclipse.jgit.api.errors.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +26,18 @@ public class TextFileStorage {
 
     @Value("${file.storage.path}")
     private String storagePath;
+
+    @PostConstruct
+    private void repositoryInit() {
+        InitCommand initCommand = Git.init();
+        initCommand.setDirectory(new File(storagePath));
+        try {
+            Git git = initCommand.call();
+        } catch (GitAPIException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
 
     public List<TextFileModel> getAllFiles() {
         List<TextFileModel> textFileModels = new ArrayList<>();
@@ -48,12 +64,33 @@ public class TextFileStorage {
 
     public void saveTextFile(TextFileModel textFileModel) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             String filePath = storagePath + textFileModel.getFileId().toString() + ".json";
+            ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(new File(filePath), textFileModel);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean commitTextFile(UUID fileID) {
+        try {
+            String filePath = storagePath + fileID + ".json";
+
+            File gitFile = new File(filePath);
+
+            try (Git git = Git.open(new File(storagePath))) {
+                git.add().addFilepattern(gitFile.getName()).call();
+                git.commit().setMessage("Add file: " + gitFile.getName()).call();
+                return true;
+            } catch (GitAPIException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public TextFileModel readTextFileByUUID(UUID fileId) {
@@ -70,7 +107,7 @@ public class TextFileStorage {
     private final int minutesOfDelay = 6 * 60;
 
     @Scheduled(fixedDelay = minutesOfDelay * 60 * 1000)
-    public void deleteFilesWithoutAccess() {
+    public void deleteLongUnusedFiles() {
 
         File directory = new File(storagePath);
         File[] files = directory.listFiles();

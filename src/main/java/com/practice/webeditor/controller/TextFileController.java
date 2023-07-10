@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/files")
+@CrossOrigin(origins = {"http://localhost:8888/"})
 public class TextFileController {
     private final TextFileService textFileService;
 
@@ -32,6 +33,11 @@ public class TextFileController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/commit/{fileId}")
+    public ResponseEntity<?> commitFile(@PathVariable("fileId") String fileId) {
+        return textFileService.commitFile(UUID.fromString(fileId)) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/{fileId}")
