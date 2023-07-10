@@ -1,14 +1,16 @@
 # WebEditor
 
-### Clone the WebEditor repository
-1. In the directory here you want to clone the project, run:
+## Installation
+
+### Clone WebEditor repository
+1. In the directory where you want to clone the project, run:
 
     ``git clone https://github.com/NaumovichID/WebEditor``
 2. Change the current working directory:
 
     ``cd WebEditor``
 
-### Running the server with Docker:
+### Run WebEditor with Docker:
 1. Build a docker image named ``spring-app`` with a following command, note that dot ``.`` is a part of the command:
 
    ```docker build -t spring-app .```
