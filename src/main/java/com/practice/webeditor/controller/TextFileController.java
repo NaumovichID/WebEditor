@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/files")
+@CrossOrigin(origins = {"http://localhost:8888/"})
 public class TextFileController {
     private final TextFileService textFileService;
 
