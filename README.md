@@ -1,6 +1,12 @@
 # WebEditor
 
-## Installation
+Welcome to the WebEditor! This simple service is designed to organize collaboration on text files.
+## Installation (server)
+
+See the instructions for the client application on [WebEditor Client](https://github.com/NaumovichID/WebEditor_Client).
+
+Follow the instructions below to start the server (using docker).
+
 
 ### Clone WebEditor repository
 1. In the directory where you want to clone the project, run:
